@@ -29,8 +29,12 @@ See `example-box/vagrantfile` for an example configuration.
 
 The following config properties for `config.git` are required:
 
-* **target**: the repository to clone. This must be a fully qualified git ref spec.
-* **path**: the path in the host or the guest to clone or pull the repo into
+* **target**: *string*: the repository to clone. This must be a fully qualified git ref spec.
+* **path**: *string*: the path in the host or the guest to clone or pull the repo into
+
+The following property is optional (but not yet supported):
+
+* **clone_in_host**: *boolean*: true to execute git commands in the host, false to execute them in the guest
 
 ## Building
 
