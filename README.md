@@ -1,6 +1,8 @@
 # vagrant-git
 
-`vagrant-git` is a [Vagrant](http://vagrantup.com) plugin for checkig out and updating git repos. It has a very simple configuration to either clone or pull repositories after a VM boots (but before it's provisioned).
+`vagrant-git` is a [Vagrant](http://vagrantup.com) plugin for checking out and updating git repos. It has a very simple configuration to either clone or pull repositories after a VM boots (but before it's provisioned).
+
+The plugin doesn't do anything special, but it helps to centralise environment configuration declaratively in the Vagrantfile, rather than relying on scripting.
 
 Currently the plugin only supports cloning into the host machine, so care should be taken to clone the repositories into a directory accessible by the guest. [vagrant-sparseimage](https://github.com/Learnosity/vagrant-sparseimage) integrates well for this use job, or a standard file share should be use.
 
