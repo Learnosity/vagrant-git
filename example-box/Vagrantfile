@@ -1,12 +1,12 @@
 Vagrant.configure("2") do |config|
-	config.vm.hostname = 'sparseimage-test'
-	config.vm.box = 'precise64nfs_clean'
-	config.vm.box_url = 'https://s3-ap-southeast-2.amazonaws.com/learnosity-vagrant/precise64nfs_clean.box'
+    config.vm.hostname = 'sparseimage-test'
+    config.vm.box = 'precise64nfs_clean'
+    config.vm.box_url = 'https://s3-ap-southeast-2.amazonaws.com/learnosity-vagrant/precise64nfs_clean.box'
     config.vm.network :private_network, ip: '172.16.42.10'
 
-	config.git.add_repo do |rc|
-		rc.target = 'https://github.com:Learnosity/vagrant-git.git'
-		rc.path = "/tmp/vagrant-git"
-		rc.clone_in_host = true
-	end
+    config.git.add_repo do |rc|
+        rc.target = 'https://github.com:Learnosity/vagrant-git.git'
+        rc.path = "/tmp/vagrant-git"
+        rc.clone_in_host = true
+    end
 end
