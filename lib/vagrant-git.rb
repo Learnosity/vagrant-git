@@ -5,7 +5,7 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.1"
+	VERSION = "0.0.2"
 	class Plugin < Vagrant.plugin("2")
 		name "vagrant git support"
 		description "A vagrant plugin to allow checking out git repositories as part of vagrant tasks."
@@ -23,12 +23,20 @@ module VagrantGit
 		# Action to either clone or pull git repos
 		def initialize(app, env); end 
 
-		def git_clone(target, path)
-			system("git clone '#{target}' '#{path}'")
+		def git_clone(target, path, branch)
+			if branch.nil?
+				system("git clone '#{target}' '#{path}'")
+			else
+				system("git clone -b '#{branch}' '#{target}' '#{path}'")
+			end
 		end
 
-		def git_pull(path)
-			system("cd '#{path}'; git fetch; git pull;")
+		def git_pull(path, branch)
+			if branch.nil?
+				system("cd '#{path}'; git fetch; git pull;")
+			else
+				system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
+			end
 		end
 
 		def call(env)
@@ -40,9 +48,9 @@ module VagrantGit
 				end
 
 				if File.exist? rc.path
-					git_pull(rc.path)
+					git_pull(rc.path, rc.branch)
 				else
-					git_clone(rc.target, rc.path)
+					git_clone(rc.target, rc.path, rc.branch)
 				end
 			end
 		end
@@ -52,7 +60,7 @@ module VagrantGit
 		# Config for a single repo
 		# Assumes that the agent has permission to check out, or that it's public
 
-		attr_accessor :target, :path, :clone_in_host
+		attr_accessor :target, :path, :clone_in_host, :branch
 
 		@@required = [:target, :path]
 

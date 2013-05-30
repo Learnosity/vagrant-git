@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
 
 	config.git.add_repo do |rc|
 		rc.target = 'https://github.com:Learnosity/vagrant-git.git'
-		rc.path = "/tmp/vagrant-git"
+		rc.path = '/tmp/vagrant-git'
+		rc.branch = 'master'
 		rc.clone_in_host = true
 	end
 end
