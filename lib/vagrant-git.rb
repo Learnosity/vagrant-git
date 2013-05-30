@@ -1,7 +1,7 @@
 begin
 	require 'vagrant'
 rescue LoadError
-	raise 'The Vagrant SparseImage plugin must be run within Vagrant.'
+	raise 'The Vagrant Git plugin must be run within Vagrant.'
 end
 
 module VagrantGit
