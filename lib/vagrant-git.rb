@@ -7,21 +7,23 @@ end
 module VagrantGit
 	VERSION = "0.0.3"
 	module Ops
-		def clone(target, path, opts = {})
-			branch = opts[:branch]
-			if branch.nil?
-				system("git clone '#{target}' '#{path}'")
-			else
-				system("git clone -b '#{branch}' '#{target}' '#{path}'")
+		class << self
+			def clone(target, path, opts = {})
+				branch = opts[:branch]
+				if branch.nil?
+					system("git clone '#{target}' '#{path}'")
+				else
+					system("git clone -b '#{branch}' '#{target}' '#{path}'")
+				end
 			end
-		end
 
-		def pull(path, opts = {})
-			branch = opts[:branch]
-			if branch.nil?
-				system("cd '#{path}'; git fetch; git pull;")
-			else
-				system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
+			def pull(path, opts = {})
+				branch = opts[:branch]
+				if branch.nil?
+					system("cd '#{path}'; git fetch; git pull;")
+				else
+					system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
+				end
 			end
 		end
 	end
@@ -115,7 +117,7 @@ module VagrantGit
 		end
 		def finalize!
 			@@repo_configs.each do |config|
-				config.finalise!
+				config.finalize!
 			end
 		end
 	end
