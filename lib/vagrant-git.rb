@@ -5,7 +5,7 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.3"
+	VERSION = "0.0.4"
 	module Ops
 		class << self
 			def clone(target, path, opts = {})
@@ -16,13 +16,16 @@ module VagrantGit
 					system("git clone -b '#{branch}' '#{target}' '#{path}'")
 				end
 			end
+			def fetch(path)
+				system("cd '#{path}'; git fetch")
+			end
 
 			def pull(path, opts = {})
 				branch = opts[:branch]
 				if branch.nil?
 					system("cd '#{path}'; git fetch; git pull;")
 				else
-					system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
+					system("cd '#{path}'; git pull origin '#{branch}';")
 				end
 			end
 		end
@@ -54,7 +57,10 @@ module VagrantGit
 				end
 
 				if File.exist? rc.path
-					VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
+					if rc.pull_on_load
+						VagrantGit::Ops::fetch(rc.path)
+						VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
+					end
 				else
 					VagrantGit::Ops::clone(rc.target, rc.path, {:branch => rc.branch})
 				end
@@ -66,7 +72,7 @@ module VagrantGit
 		# Config for a single repo
 		# Assumes that the agent has permission to check out, or that it's public
 
-		attr_accessor :target, :path, :clone_in_host, :branch
+		attr_accessor :target, :path, :clone_in_host, :branch, :sync_on_load
 
 		@@required = [:target, :path]
 
@@ -85,6 +91,9 @@ module VagrantGit
 			if @clone_in_host.nil?
 				@clone_in_host = true
 			end
+			if @sync_on_load.nil?
+				@sync_on_load = false
+			end
 		end
 	end
 
@@ -94,6 +103,7 @@ module VagrantGit
 		class << self
 			attr_accessor :repo_configs
 		end
+
 		def to_hash
 			{ :repos => @@repo_configs }
 		end

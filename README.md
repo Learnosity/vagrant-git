@@ -42,6 +42,7 @@ The following properties are optional (but not yet supported):
 
 * **branch**: Which branch to check out / pull
 * **clone_in_host**: *boolean*: true to execute git commands in the host, false to execute them in the guest. NOT YET SUPPORTED for false.
+* **pull_on_load**: whether to do a fetch & pull when starting up the VM
 
 ## Building
 
