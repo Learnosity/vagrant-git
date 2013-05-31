@@ -5,7 +5,27 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.2"
+	VERSION = "0.0.3"
+	module Ops
+		def clone(target, path, opts = {})
+			branch = opts[:branch]
+			if branch.nil?
+				system("git clone '#{target}' '#{path}'")
+			else
+				system("git clone -b '#{branch}' '#{target}' '#{path}'")
+			end
+		end
+
+		def pull(path, opts = {})
+			branch = opts[:branch]
+			if branch.nil?
+				system("cd '#{path}'; git fetch; git pull;")
+			else
+				system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
+			end
+		end
+	end
+
 	class Plugin < Vagrant.plugin("2")
 		name "vagrant git support"
 		description "A vagrant plugin to allow checking out git repositories as part of vagrant tasks."
@@ -23,22 +43,6 @@ module VagrantGit
 		# Action to either clone or pull git repos
 		def initialize(app, env); end 
 
-		def git_clone(target, path, branch)
-			if branch.nil?
-				system("git clone '#{target}' '#{path}'")
-			else
-				system("git clone -b '#{branch}' '#{target}' '#{path}'")
-			end
-		end
-
-		def git_pull(path, branch)
-			if branch.nil?
-				system("cd '#{path}'; git fetch; git pull;")
-			else
-				system("cd '#{path}'; git fetch; git pull origin '#{branch}';")
-			end
-		end
-
 		def call(env)
 			vm = env[:machine]
 			vm.config.git.to_hash[:repos].each do |rc|
@@ -48,9 +52,9 @@ module VagrantGit
 				end
 
 				if File.exist? rc.path
-					git_pull(rc.path, rc.branch)
+					VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
 				else
-					git_clone(rc.target, rc.path, rc.branch)
+					VagrantGit::Ops::clone(rc.target, rc.path, {:branch => rc.branch})
 				end
 			end
 		end
@@ -108,6 +112,11 @@ module VagrantGit
 				end
 			end
 			errors
+		end
+		def finalize!
+			@@repo_configs.each do |config|
+				config.finalise!
+			end
 		end
 	end
 end

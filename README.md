@@ -10,8 +10,12 @@ When you run `vagrant up` or `vagrant provision`, this plugin will clone or pull
 
 Planning to implement a command - `vagrant git` - supporting `list`, `pull`, `clone` and `reset` to streamline this a little.
 
+
 ## Dependencies
+
 Only supports Vagrant > 1.2.
+
+Requires Ruby 2.0+.
 
 Requires `git`.
 
@@ -34,9 +38,10 @@ The following config properties for `config.git` are required:
 * **target**: *string*: the repository to clone. This must be a fully qualified git ref spec.
 * **path**: *string*: the path in the host or the guest to clone or pull the repo into
 
-The following property is optional (but not yet supported):
+The following properties are optional (but not yet supported):
 
-* **clone_in_host**: *boolean*: true to execute git commands in the host, false to execute them in the guest
+* **branch**: Which branch to check out / pull
+* **clone_in_host**: *boolean*: true to execute git commands in the host, false to execute them in the guest. NOT YET SUPPORTED for false.
 
 ## Building
 
