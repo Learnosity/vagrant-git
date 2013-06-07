@@ -15,8 +15,6 @@ Planning to implement a command - `vagrant git` - supporting `list`, `pull`, `cl
 
 Only supports Vagrant > 1.2.
 
-Requires Ruby 2.0+.
-
 Requires `git`.
 
 ## Installation
