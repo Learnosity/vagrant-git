@@ -5,7 +5,7 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.4"
+	VERSION = "0.0.5"
 	module Ops
 		class << self
 			def clone(target, path, opts = {})
@@ -56,8 +56,8 @@ module VagrantGit
 					raise 'NotImplemented: clone_in_host=>false'
 				end
 
-				if File.exist? rc.path
-					if rc.pull_on_load
+				if File.exist? rc.path + '/.git'
+					if rc.sync_on_load
 						VagrantGit::Ops::fetch(rc.path)
 						VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
 					end
