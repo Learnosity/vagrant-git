@@ -5,7 +5,7 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.5"
+	VERSION = "0.0.6"
 	module Ops
 		class << self
 			def clone(target, path, opts = {})
@@ -27,6 +27,10 @@ module VagrantGit
 				else
 					system("cd '#{path}'; git pull origin '#{branch}';")
 				end
+			end
+
+			def set_upstream(path, target)
+				system("cd '#{path}'; git remote set-url origin '#{target}';")
 			end
 		end
 	end
@@ -63,6 +67,10 @@ module VagrantGit
 					end
 				else
 					VagrantGit::Ops::clone(rc.target, rc.path, {:branch => rc.branch})
+					if rc.set_upstream
+						vm.ui.info("Clone done - setting upstream of #{rc.path} to #{rc.set_upstream}")
+						VagrantGit::Ops::set_upstream(rc.path, rc.set_upstream)
+					end
 				end
 			end
 		end
@@ -72,7 +80,7 @@ module VagrantGit
 		# Config for a single repo
 		# Assumes that the agent has permission to check out, or that it's public
 
-		attr_accessor :target, :path, :clone_in_host, :branch, :sync_on_load
+		attr_accessor :target, :path, :clone_in_host, :branch, :sync_on_load, :set_upstream
 
 		@@required = [:target, :path]
 
