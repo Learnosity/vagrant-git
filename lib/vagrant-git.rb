@@ -5,32 +5,39 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.6"
+	VERSION = "0.0.7"
 	module Ops
 		class << self
+			# Run the command, wait for exit and return the Process object.
+			def run(cmd)
+				pid = Process.fork { exec(cmd) }
+				Process.waitpid(pid)
+				return $?
+			end
+
 			def clone(target, path, opts = {})
 				branch = opts[:branch]
 				if branch.nil?
-					system("git clone '#{target}' '#{path}'")
+					return run("git clone '#{target}' '#{path}'")
 				else
-					system("git clone -b '#{branch}' '#{target}' '#{path}'")
+					return run("git clone -b '#{branch}' '#{target}' '#{path}'")
 				end
 			end
 			def fetch(path)
-				system("cd '#{path}'; git fetch")
+				return run("cd '#{path}'; git fetch")
 			end
 
 			def pull(path, opts = {})
 				branch = opts[:branch]
 				if branch.nil?
-					system("cd '#{path}'; git fetch; git pull;")
+					return run("cd '#{path}'; git fetch; git pull;")
 				else
-					system("cd '#{path}'; git pull origin '#{branch}';")
+					return run("cd '#{path}'; git pull origin '#{branch}';")
 				end
 			end
 
 			def set_upstream(path, target)
-				system("cd '#{path}'; git remote set-url origin '#{target}';")
+				return run("cd '#{path}'; git remote set-url origin '#{target}';")
 			end
 		end
 	end
@@ -56,7 +63,6 @@ module VagrantGit
 			vm = env[:machine]
 			vm.config.git.to_hash[:repos].each do |rc|
 				if not rc.clone_in_host
-					# TODO
 					raise 'NotImplemented: clone_in_host=>false'
 				end
 
@@ -66,10 +72,14 @@ module VagrantGit
 						VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
 					end
 				else
-					VagrantGit::Ops::clone(rc.target, rc.path, {:branch => rc.branch})
-					if rc.set_upstream
+					p = VagrantGit::Ops::clone(rc.target, rc.path, {:branch => rc.branch})
+					if p.success? and rc.set_upstream
 						vm.ui.info("Clone done - setting upstream of #{rc.path} to #{rc.set_upstream}")
-						VagrantGit::Ops::set_upstream(rc.path, rc.set_upstream)
+						if not VagrantGit::Ops::set_upstream(rc.path, rc.set_upstream).success?
+							vm.ui.error("WARNING: Failed to change upstream to #{rc.set_upstream} in #{rc.path}")
+						end
+					else
+						vm.ui.error("WARNING: Failed to clone #{rc.target} into #{rc.path}")
 					end
 				end
 			end
