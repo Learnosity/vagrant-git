@@ -5,7 +5,6 @@ rescue LoadError
 end
 
 module VagrantGit
-	VERSION = "0.0.7"
 	module Ops
 		class << self
 			# Run the command, wait for exit and return the Process object.
@@ -34,6 +33,10 @@ module VagrantGit
 				else
 					return run("cd '#{path}'; git pull origin '#{branch}';")
 				end
+			end
+
+			def submodule(path)
+				return run("cd '#{path}' && git submodule init && git submodule update")
 			end
 
 			def set_upstream(path, target)
@@ -66,7 +69,7 @@ module VagrantGit
 					raise 'NotImplemented: clone_in_host=>false'
 				end
 
-				if File.exist? rc.path + '/.git'
+				if File.exist? "#{rc.path}/.git"
 					if rc.sync_on_load
 						VagrantGit::Ops::fetch(rc.path)
 						VagrantGit::Ops::pull(rc.path, {:branch => rc.branch})
@@ -80,6 +83,14 @@ module VagrantGit
 						end
 					else
 						vm.ui.error("WARNING: Failed to clone #{rc.target} into #{rc.path}")
+					end
+					if File.exist? "#{rc.path}/.gitmodules"
+						p = VagrantGit::Ops::submodule(rc.path)
+						if p.success?
+							vm.ui.info("Checked out submodules.")
+						else
+							vm.ui.error("WARNING: Failed to check out submodules for #{path}")
+						end
 					end
 				end
 			end
