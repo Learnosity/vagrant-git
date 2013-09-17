@@ -36,7 +36,7 @@ module VagrantGit
 			end
 
 			def submodule(path)
-				return run("cd '#{path}' && git submodule init && git submodule update")
+				return run("cd '#{path}' && git submodule update --init --recursive")
 			end
 
 			def set_upstream(path, target)
