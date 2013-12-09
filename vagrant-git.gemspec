@@ -1,18 +1,21 @@
 # -*- encoding: utf-8 -*-
 $:.unshift File.expand_path("../lib", __FILE__)
-require 'version.rb'
+
+require 'vagrant-git/version.rb'
 
 Gem::Specification.new do |s|
 	s.name			= 'vagrant-git'
-	s.version		= VagrantGit::VERSION
+	s.version		= VagrantPlugins::VagrantGit::VERSION
 	s.platform		= Gem::Platform::RUBY
-	s.authors		= ['Daniel Bryan']
+	s.authors		= ['Daniel Bryan', 'Alan Garfield']
 	s.license		= 'MIT'
-	s.email			= ['danbryan@gmail.com']
+	s.email			= ['danbryan@gmail.com', 'alan.garfield@learnosity.com']
 	s.homepage		= 'https://github.com/Learnosity/vagrant-git'
 	s.summary		= %q{A vagrant plugin to allow checking out git repositories as part of vagrant tasks.}
 	s.description	= %q{A vagrant plugin to allow checking out git repositories as part of vagrant tasks.}
-	s.files = ['lib/vagrant-git.rb']
+
+  s.files         = `git ls-files`.split($/)
+  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
 	s.require_paths = ['lib']
 
 	s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
