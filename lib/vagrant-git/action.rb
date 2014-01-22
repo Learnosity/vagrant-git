@@ -32,7 +32,7 @@ module VagrantPlugins
                 if not Git::set_upstream(rc.path, rc.set_upstream).success?
                   @vm.ui.error("WARNING: Failed to change upstream to #{rc.set_upstream} in #{rc.path}")
                 end
-              else
+              else !p.success?
                 @vm.ui.error("WARNING: Failed to clone #{rc.target} into #{rc.path}")
               end
               if File.exist? "#{rc.path}/.gitmodules"
