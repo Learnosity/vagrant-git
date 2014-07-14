@@ -1,7 +1,9 @@
 source "http://rubygems.org"
 
-gemspec
-
 group :development do
-	gem "vagrant", :git => 'git://github.com/Learnosity/vagrant.git'
+  gem "vagrant", :git => "git://github.com/mitchellh/vagrant.git"
+end
+
+group :plugins do
+  gem "vagrant-git", path: "."
 end
