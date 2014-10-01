@@ -48,7 +48,7 @@ module VagrantPlugins
                 if p.success?
                   @vm.ui.info("Checked out submodules.")
                 else
-                  err ="WARNING: Failed to check out submodules for #{path}"
+                  err ="WARNING: Failed to check out submodules for #{rc.path}"
                   errors[rc.path].push(err)
                   @vm.ui.error(err)
                 end
