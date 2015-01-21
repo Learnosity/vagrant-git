@@ -15,8 +15,8 @@ module VagrantPlugins
       require File.expand_path("../action", __FILE__)
       %w{up reload}.each do |action|
         action_hook(:git, "machine_action_#{action}".to_sym) do |hook|
-          hook.after(
-            Vagrant::Action::Builtin::SyncedFolderCleanup,
+          hook.before(
+            Vagrant::Action::Builtin::Provision,
             Action::HandleRepos
           )
         end
