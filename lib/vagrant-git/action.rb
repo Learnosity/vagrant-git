@@ -37,7 +37,7 @@ module VagrantPlugins
                   errors[rc.path].push(err)
                   @vm.ui.error(err)
                 end
-              else !p.success?
+              elsif !p.success?
                 err = "Failed to clone #{rc.target} into #{rc.path}"
                 errors[rc.path].push(err)
                 @vm.ui.error(err)
