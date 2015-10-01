@@ -24,7 +24,7 @@ See **building** below for building the gem.
 Use `vagrant plugin` to install the gem in your Vagrant environment:
 
 ```bash
-$ vagrant plugin install vagrant-git.gem
+$ vagrant plugin install vagrant-git
 ```
 
 ## Configuration
@@ -40,12 +40,12 @@ The following properties are optional (but not yet supported):
 
 * **branch**: Which branch to check out / pull
 * **clone_in_host**: *boolean*: true to execute git commands in the host, false to execute them in the guest. NOT YET SUPPORTED for false.
-* **pull_on_load**: whether to do a fetch & pull when starting up the VM
+* **sync_on_load**: whether to do a fetch & pull when starting up the VM
 * **set_upstream**: a different remote URL to set the upstream origin to after cloning the repository
 
 ## Building
 
 ```bash
 $ bundle install
-$ gem build vagrant-sparseimage.gemspec
+$ gem build vagrant-git.gemspec
 ```
