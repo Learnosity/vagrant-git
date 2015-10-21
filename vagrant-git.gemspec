@@ -26,6 +26,4 @@ Gem::Specification.new do |s|
 	end
 
 	s.add_development_dependency 'bundler', '>= 1.2.0'
-	s.add_development_dependency 'vagrant', '>= 1.2'
-
 end
