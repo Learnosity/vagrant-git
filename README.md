@@ -47,5 +47,6 @@ The following properties are optional (but not yet supported):
 
 ```bash
 $ bundle install
-$ gem build vagrant-git.gemspec
+$ cd ./example-box/
+$ bundle exec vagrant up
 ```
