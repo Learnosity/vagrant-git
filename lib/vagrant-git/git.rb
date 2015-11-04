@@ -4,7 +4,7 @@ module VagrantPlugins
       class << self
         # Run the command, wait for exit and return the Process object.
         def run(cmd)
-          pid = Process.fork { exec(cmd) }
+          pid = spawn(cmd)
           Process.waitpid(pid)
           return $?
         end
